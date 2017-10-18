@@ -1,0 +1,122 @@
+28823+29292
+var1 = 1991+19110
+var1
+VAR1
+var1
+a = c(1,2,3)
+a
+-magnification
+c(1,2,3)+c(1,2,3)
+numbers+numbers
+a
+a+a
+(a+a)==((1,2,3)+c(1,2,3))
+(a+a)=((1,2,3)+c(1,2,3))
+rm(list=objects())
+numbers
+a
+clear
+--
+----
+weight = c(7.6, 6.7, 1.2, 4.5)
+weight
+total = sum(weight)
+total
+mean(weight)
+mean
+mean = mean(5)
+mean
+length(weight)
+weight = c(weight, 8.4)
+weight
+length(weight)
+vector = c(93, 77, 90, 28, 76)
+mean(vector)
+sd(vector)
+vector_new = c(35, 92, 87, 71)
+sd(vector_new)
+mean(vector_new)
+vector_new = c(vector, 35, 92, 87, 71)
+mean(vector_new)
+sd(vector_new)
+vector_new
+height <- c(8.5, 7.8, 2.3, 2.4, 4.8, 2.9)
+length(height)
+length(vector_new)
+weight
+length(weight)
+weight = c(weight, 4.5)
+dog = data.frame(weight, height)
+dog
+fix(dog)
+dog$weight
+dog$height
+dog$backlength = c(vector)
+stud_id = c(19, 53, 52, 49, 47)
+tel_no = c(53, 40, 26, 68, 02)
+student = data.frame(stud_id, tel_no)
+student
+summary(student$stud_id)
+summary(student$tel_no)
+summary(student)
+2+2
+max = c(21, 14, 12, 11)
+min = c(8, 7, 10, 9)
+min
+max
+(max-min)^2
+sum((max-min)^2)
+getwd
+getwd()
+setwd("/Users/vasu/Downloads")
+getwd()
+data1 = read.csv(file = "trump_tweets.csv" , header = TRUE)
+tweet_data = data1[c("source", "text")]
+twit_iphone = subset(data1, source == "Twitter for iPhone")
+twit_iphone = subset(tweet_data, source == "Twitter for iPhone")
+twit_n_iphone = subset(tweet_data, source != "Twitter for iPhone")
+write.csv(x = twit_iphone , file = “Tweet_iPhone.csv”)
+write.csv(x = twit_iphone , file = “Tweet_iPhone.csv”)
+write.csv(twit_iphone , file = “Tweet_iPhone.csv”)
+write.csv(twit_iphone , file = 'tweet_iPhone.csv')
+write.csv(x = twit_n_iphone , file = 'tweet_n_iPhone.csv')
+data12 = read.csv(file = "titanic.csv" , header = TRUE)
+data2 = read.csv(file = "titanic.csv" , header = TRUE)
+class1 = subset(data2, Pclass == "1")
+class2 = subset(data2, Pclass == "2")
+class3 = subset(data2, Pclass == "3")
+summary(class1)
+summary(class1$Fare)
+install.packages("rvest")
+library(rvest)
+install.packages("rvest")
+install.packages("rvest")
+url = "http://www.imdb.com/movies-in-theaters/"
+webpage = read_html(url)
+install.packages("rvest")
+q
+webpage = read_html(url)
+install.packages('xml2')
+library('xml2')
+webpage = read_html(url)
+setwd("/Users/vasu/Desktop/R-stuff/")
+url = "http://www.imdb.com/movies-in-theaters/"
+webpage = read_html(url)
+rank_data_html = html_nodes(webpage,'time')
+library(rvest)
+rank_data_html = html_nodes(webpage,'time')
+rank_data_html
+rank_data <- html_text(rank_data_html)
+head(rank_data)
+url = "http://www.imdb.com/search/title?count=100&release_date=2017,2017&title_type=feature"
+webpage2 = read_url(url)
+install.packages('xml2')
+library('xml2')
+webpage2 = read_url(url)
+webpage2 = read_url(url)
+install.packages('xml2')
+install.packages('rvest')
+library('rvest')
+install.packages('xml2')
+library('xml2')
+webpage2 = read_url(url)
