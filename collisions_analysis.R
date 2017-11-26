@@ -14,24 +14,26 @@ data_set = data_set[,-1]
 data_set = data_set[,-7]
 data_set = data_set[ , -which(names(data_set) %in% c("OFF.STREET.NAME","VEHICLE.2.FACTOR","VEHICLE.3.FACTOR", "VEHICLE.4.FACTOR", "VEHICLE.5.FACTOR","VEHICLE.3.TYPE", "VEHICLE.4.TYPE", "VEHICLE.5.TYPE"))]
 main_boroughs = dplyr::filter(data_set, BOROUGH==1 | BOROUGH==2 | BOROUGH==3 | BOROUGH==4 | BOROUGH==5)
-# factor_inattention = main_boroughs[ grep("INATTENTION" | grep("DISTRACTION"), main_boroughs$VEHICLE.1.FACTOR),]
 
 main_boroughs = dplyr::mutate(main_boroughs, hour = gsub("^(.*?):.*", "\\1", main_boroughs$TIME))
 main_boroughs = dplyr::mutate(main_boroughs, month = substr(main_boroughs$DATE, 1, 2))
 
 all_injured = dplyr::filter(main_boroughs, `PERSONS.INJURED` != 0)
 all_killed = dplyr::filter(main_boroughs, `PERSONS.KILLED` != 0)
+cyclists = dplyr::filter(main_boroughs, `CYCLISTS.KILLED` != 0 | `CYCLISTS.INJURED` != 0)
 cyclists_injured = dplyr::filter(main_boroughs, `CYCLISTS.INJURED` != 0)
 cyclists_killed = dplyr::filter(main_boroughs, `CYCLISTS.KILLED` != 0)
+motorists = dplyr::filter(main_boroughs, `MOTORISTS.KILLED` != 0 | `MOTORISTS.INJURED` != 0)
 motorists_injured = dplyr::filter(main_boroughs, `MOTORISTS.INJURED` != 0)
 motorists_killed = dplyr::filter(main_boroughs, `MOTORISTS.KILLED` != 0)
+pedestrians = dplyr::filter(main_boroughs, `PEDESTRIANS.KILLED` != 0 | `PEDESTRIANS.INJURED` != 0)
 pedestrians_injured = dplyr::filter(main_boroughs, `PEDESTRIANS.INJURED` != 0)
 pedestrians_killed = dplyr::filter(main_boroughs, `PEDESTRIANS.KILLED` != 0)
 
 main_boroughs$hour = as.numeric(main_boroughs$hour)
 midnight = dplyr::filter(main_boroughs, hour >= 1 & hour <= 6)
-morning = dplyr::filter(main_boroughs, hour >= 7 & hour <= 12)
-afternoon = dplyr::filter(main_boroughs, hour >= 13 & hour <= 18)
+morning = dplyr::filter(main_boroughs, hour > 6 & hour <= 12)
+afternoon = dplyr::filter(main_boroughs, hour > 12 & hour <= 18)
 # evening = dplyr::filter(main_boroughs, hour >= 19 & hour <=0)
 # didn't work cause the number don't make sense
 evening = dplyr::filter(main_boroughs, !(hour >= 1 & hour <= 18))
@@ -40,12 +42,54 @@ main_boroughs$month = as.numeric(main_boroughs$month)
 temperatures = read.csv("NYC-temperatures.csv")
 names(main_boroughs)[names(main_boroughs) == "month"] = "Month"
 main_boroughs_temp = dplyr::inner_join(main_boroughs, temperatures, by = "Month")
-main_boroughs_temp = dplyr::mutate(main_boroughs_temp, time_of_day = ifelse(hour %in% 0:5, "Midnight",
+main_boroughs_temp = dplyr::mutate(main_boroughs_temp, time_of_day = ifelse(hour %in% 0:6, "Midnight",
 ifelse(hour %in% 6:12, "Morning", 
-ifelse(hour %in% 13:18, "Afternoon","Evening"))))
+ifelse(hour %in% 12:18, "Afternoon","Evening"))))
 main_boroughs_temp = main_boroughs_temp[ , -which(names(main_boroughs_temp) %in% c("Avg..Precip.","Record.Low", "Record.High"))]
 main_boroughs_temp = dplyr::mutate(main_boroughs_temp, season = ifelse(Month %in% 5:8, "Summer",
 ifelse(Month %in% 9:11, "Fall","Winter")))
+
+factor_inattention = main_boroughs_temp[ grep("INATTENTION", main_boroughs_temp$VEHICLE.1.FACTOR),]
+tmp_distract = main_boroughs_temp[ grep("DISTRACTION", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_inattention = dplyr::union(tmp_distract, factor_inattention)
+factor_inattention = dplyr::distinct(factor_inattention)
+main_boroughs_temp = dplyr::filter(main_boroughs_temp, 
+                                   VEHICLE.1.FACTOR == 'ALCOHOL INVOLVEMENT' | 
+                                     VEHICLE.1.FACTOR == 'BACKING UNSAFELY' | 
+                                     VEHICLE.1.FACTOR == 'DRIVER INEXPERIENCE' | 
+                                     VEHICLE.1.FACTOR == 'DRIVER INATTENTION/DISTRACTION' | 
+                                     VEHICLE.1.FACTOR == 'TURNING IMPROPERLY' |
+                                     VEHICLE.1.FACTOR == 'TRAFFIC CONTROL DISREGARDED' | 
+                                     VEHICLE.1.FACTOR == 'FAILURE TO YIELD RIGHT-OF-WAY' | 
+                                     VEHICLE.1.FACTOR == 'FATIGUED/DROWSY' | 
+                                     VEHICLE.1.FACTOR == 'PRESCRIPTION MEDICATION' | 
+                                     VEHICLE.1.FACTOR == 'LOST CONSCIOUSNESS')
+factor_alcohol = main_boroughs_temp[ grep("ALCOHOL", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_backing = main_boroughs_temp[ grep("BACKING", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_inexperience = main_boroughs_temp[ grep("INEXPERIENCE", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_turning = main_boroughs_temp[ grep("TURNING", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_drowsy = main_boroughs_temp[ grep("DROWSY", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_trafficControl = main_boroughs_temp[ grep("TRAFFIC CONTROL", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_medication = main_boroughs_temp[ grep("MEDICATION", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_consciousness = main_boroughs_temp[ grep("CONSCIOUSNESS", main_boroughs_temp$VEHICLE.1.FACTOR),]
+factor_yield = main_boroughs_temp[ grep("FAILURE TO YIELD", main_boroughs_temp$VEHICLE.1.FACTOR),]
+
+all_injured = dplyr::filter(main_boroughs_temp, `PERSONS.INJURED` != 0)
+all_killed = dplyr::filter(main_boroughs_temp, `PERSONS.KILLED` != 0)
+cyclists = dplyr::filter(main_boroughs_temp, `CYCLISTS.KILLED` != 0 | `CYCLISTS.INJURED` != 0)
+cyclists_injured = dplyr::filter(main_boroughs_temp, `CYCLISTS.INJURED` != 0)
+cyclists_killed = dplyr::filter(main_boroughs_temp, `CYCLISTS.KILLED` != 0)
+motorists = dplyr::filter(main_boroughs_temp, `MOTORISTS.KILLED` != 0 | `MOTORISTS.INJURED` != 0)
+motorists_injured = dplyr::filter(main_boroughs_temp, `MOTORISTS.INJURED` != 0)
+motorists_killed = dplyr::filter(main_boroughs_temp, `MOTORISTS.KILLED` != 0)
+pedestrians = dplyr::filter(main_boroughs_temp, `PEDESTRIANS.KILLED` != 0 | `PEDESTRIANS.INJURED` != 0)
+pedestrians_injured = dplyr::filter(main_boroughs_temp, `PEDESTRIANS.INJURED` != 0)
+pedestrians_killed = dplyr::filter(main_boroughs_temp, `PEDESTRIANS.KILLED` != 0)
+
+main_boroughs_temp = dplyr::mutate(main_boroughs_temp, cyclists = CYCLISTS.INJURED+CYCLISTS.KILLED)
+main_boroughs_temp = dplyr::mutate(main_boroughs_temp, motorists = MOTORISTS.INJURED+MOTORISTS.KILLED)
+main_boroughs_temp = dplyr::mutate(main_boroughs_temp, pedestrians = PEDESTRIANS.INJURED+PEDESTRIANS.KILLED)
+
 winter = dplyr::filter(main_boroughs_temp, season == 'Winter')
 fall = dplyr::filter(main_boroughs_temp, season == 'Fall')
 summer = dplyr::filter(main_boroughs_temp, season == 'Summer')
@@ -54,3 +98,4 @@ summer = dplyr::filter(main_boroughs_temp, season == 'Summer')
 # library(ggplot2)
 # temp_plot_ = ggplot(factor_distraction, aes(VEHICLE.1.FACTOR, PERSONS.KILLED))
 # temp_plot_ + geom_point()
+
