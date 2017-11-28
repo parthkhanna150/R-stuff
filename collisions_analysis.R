@@ -8,7 +8,7 @@
 #    Pedestrian injured/killed number highest
 #    Highest number of collisions during afternoon
 #    
-
+setwd("/Users/vasu/Desktop/R-stuff")
 data_set = read.csv("NYC-vehicle-collisions.csv")
 data_set = data_set[,-1]
 data_set = data_set[,-7]
@@ -95,7 +95,14 @@ winter = dplyr::filter(main_boroughs_temp, season == 'Winter')
 fall = dplyr::filter(main_boroughs_temp, season == 'Fall')
 summer = dplyr::filter(main_boroughs_temp, season == 'Summer')
 
-main_boroughs_ttest = dplyr::filter(main_boroughs_temp, pedestrians!=0 | cyclists!=0 | motorists !=0)
+main_boroughs_temp = dplyr::filter(main_boroughs_temp, pedestrians!=0 | cyclists!=0 | motorists !=0)
+mot = c(main_boroughs_ttest$motorists)
+ped = c(main_boroughs_ttest$pedestrians)
+cyc = c(main_boroughs_ttest$cyclists)
+cor(ped, mot)
+cor(cyc, mot)
+cor(cyc, ped)
+
 
 # library(ggplot2)
 # temp_plot_ = ggplot(factor_distraction, aes(VEHICLE.1.FACTOR, PERSONS.KILLED))
