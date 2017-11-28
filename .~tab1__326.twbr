@@ -588,7 +588,7 @@
           <alias key='&quot;[federated.0o2f5990za50371gu5lcs1qckco7].[usr:Calculation_529102593463148546:qk]&quot;' value='Cyclists' />
         </aliases>
       </column>
-      <column caption='Borough' datatype='integer' name='[BOROUGH]' role='measure' type='quantitative'>
+      <column aggregation='Sum' caption='Borough' datatype='integer' name='[BOROUGH]' role='dimension' type='ordinal'>
         <aliases>
           <alias key='1' value='Queens' />
           <alias key='2' value='Brooklyn' />
@@ -597,7 +597,7 @@
           <alias key='5' value='Staten Island' />
         </aliases>
       </column>
-      <column caption='Borough (bin)' datatype='integer' name='[Borough (bin)]' role='dimension' type='ordinal'>
+      <column aggregation='None' caption='Borough (bin)' datatype='integer' name='[Borough (bin)]' role='dimension' type='ordinal'>
         <calculation class='bin' decimals='-3' formula='[BOROUGH]' peg='0' size='0.865' />
       </column>
       <column caption='Cross.Street.Name' datatype='string' name='[CROSS.STREET.NAME]' role='dimension' type='nominal' />
@@ -627,14 +627,19 @@
       <column caption='Zip.Code' datatype='integer' default-format='*00000' name='[ZIP.CODE]' role='dimension' semantic-role='[ZipCode].[Name]' type='ordinal' />
       <column aggregation='Sum' datatype='integer' name='[cyclists]' role='dimension' type='ordinal' />
       <column caption='Hour' datatype='integer' name='[hour]' role='measure' type='quantitative' />
+      <column aggregation='None' caption='motorists (bin)' datatype='integer' name='[motorists (bin)]' role='dimension' type='ordinal'>
+        <calculation class='bin' decimals='0' formula='[motorists]' peg='0' size='4' />
+      </column>
       <column aggregation='Sum' datatype='integer' name='[motorists]' role='dimension' type='ordinal' />
       <column aggregation='Sum' datatype='integer' name='[pedestrians]' role='dimension' type='ordinal' />
       <column caption='Season' datatype='string' name='[season]' role='dimension' type='nominal' />
       <column aggregation='CountD' datatype='string' name='[time_of_day]' role='dimension' type='nominal' />
+      <column-instance column='[BOROUGH]' derivation='None' name='[none:BOROUGH:ok]' pivot='key' type='ordinal' />
       <column-instance column='[VEHICLE.1.FACTOR]' derivation='None' name='[none:VEHICLE.1.FACTOR:nk]' pivot='key' type='nominal' />
       <column-instance column='[cyclists]' derivation='None' name='[none:cyclists:ok]' pivot='key' type='ordinal' />
       <column-instance column='[motorists]' derivation='None' name='[none:motorists:ok]' pivot='key' type='ordinal' />
       <column-instance column='[pedestrians]' derivation='None' name='[none:pedestrians:ok]' pivot='key' type='ordinal' />
+      <column-instance column='[time_of_day]' derivation='None' name='[none:time_of_day:nk]' pivot='key' type='nominal' />
       <column-instance column='[PEDESTRIANS.INJURED]' derivation='Sum' name='[sum:PEDESTRIANS.INJURED:qk]' pivot='key' type='quantitative' />
       <column-instance column='[Calculation_529102593463148546]' derivation='User' name='[usr:Calculation_529102593463148546:qk]' pivot='key' type='quantitative' />
       <layout dim-ordering='alphabetic' dim-percentage='0.642722' measure-ordering='alphabetic' measure-percentage='0.357278' show-structure='true' user-set-layout='true' />
@@ -682,11 +687,17 @@
             <map to='#59a14f'>
               <bucket>&quot;UNSAFE LANE CHANGING&quot;</bucket>
             </map>
+            <map to='#76b7b2'>
+              <bucket>&quot;ALCOHOL INVOLVEMENT&quot;</bucket>
+            </map>
             <map to='#79706e'>
               <bucket>&quot;FELL ASLEEP&quot;</bucket>
             </map>
             <map to='#79706e'>
               <bucket>&quot;REACTION TO OTHER UNINVOLVED VEHICLE&quot;</bucket>
+            </map>
+            <map to='#79aacf'>
+              <bucket>&quot;BACKING UNSAFELY&quot;</bucket>
             </map>
             <map to='#86bcb6'>
               <bucket>&quot;HEADLIGHTS DEFECTIVE&quot;</bucket>
@@ -695,13 +706,13 @@
               <bucket>&quot;TIRE FAILURE/INADEQUATE&quot;</bucket>
             </map>
             <map to='#8cd17d'>
-              <bucket>&quot;ALCOHOL INVOLVEMENT&quot;</bucket>
-            </map>
-            <map to='#8cd17d'>
               <bucket>&quot;OBSTRUCTION/DEBRIS&quot;</bucket>
             </map>
             <map to='#8cd17d'>
               <bucket>&quot;TURNING IMPROPERLY&quot;</bucket>
+            </map>
+            <map to='#91b3d7'>
+              <bucket>&quot;TRAFFIC CONTROL DISREGARDED&quot;</bucket>
             </map>
             <map to='#9d7660'>
               <bucket>&quot;DRIVER INEXPERIENCE&quot;</bucket>
@@ -730,17 +741,11 @@
             <map to='#b6992d'>
               <bucket>&quot;LOST CONSCIOUSNESS&quot;</bucket>
             </map>
-            <map to='#b6992d'>
-              <bucket>&quot;TRAFFIC CONTROL DISREGARDED&quot;</bucket>
-            </map>
-            <map to='#bab0ac'>
-              <bucket>&quot;FATIGUED/DROWSY&quot;</bucket>
+            <map to='#b9ddf1'>
+              <bucket>&quot;FAILURE TO YIELD RIGHT-OF-WAY&quot;</bucket>
             </map>
             <map to='#bab0ac'>
               <bucket>&quot;PRESCRIPTION MEDICATION&quot;</bucket>
-            </map>
-            <map to='#d37295'>
-              <bucket>&quot;FAILURE TO YIELD RIGHT-OF-WAY&quot;</bucket>
             </map>
             <map to='#d37295'>
               <bucket>&quot;PHYSICAL DISABILITY&quot;</bucket>
@@ -750,6 +755,9 @@
             </map>
             <map to='#d4a6c8'>
               <bucket>&quot;PAVEMENT DEFECTIVE&quot;</bucket>
+            </map>
+            <map to='#d5d5d5'>
+              <bucket>&quot;FATIGUED/DROWSY&quot;</bucket>
             </map>
             <map to='#d7b5a6'>
               <bucket>&quot;DRIVER INATTENTION/DISTRACTION&quot;</bucket>
@@ -794,9 +802,6 @@
               <bucket>&quot;SHOULDERS DEFECTIVE/IMPROPER&quot;</bucket>
             </map>
             <map to='#ffbe7d'>
-              <bucket>&quot;BACKING UNSAFELY&quot;</bucket>
-            </map>
-            <map to='#ffbe7d'>
               <bucket>&quot;OTHER LIGHTING DEFECTS&quot;</bucket>
             </map>
             <map to='#ffbe7d'>
@@ -807,96 +812,147 @@
             <map to='#4e79a7'>
               <bucket>0</bucket>
             </map>
-            <map to='#59a14f'>
-              <bucket>4</bucket>
+            <map to='#76b7b2'>
+              <bucket>2</bucket>
             </map>
             <map to='#76b7b2'>
               <bucket>3</bucket>
             </map>
-            <map to='#b07aa1'>
-              <bucket>6</bucket>
+            <map to='#c5c7c6'>
+              <bucket>1</bucket>
             </map>
             <map to='#e15759'>
-              <bucket>2</bucket>
+              <bucket>4</bucket>
             </map>
-            <map to='#edc948'>
+            <map to='#e15759'>
               <bucket>5</bucket>
             </map>
-            <map to='#f28e2b'>
-              <bucket>1</bucket>
+            <map to='#e15759'>
+              <bucket>6</bucket>
             </map>
           </encoding>
           <encoding attr='color' field='[none:cyclists:ok]' type='palette'>
             <map to='#4e79a7'>
               <bucket>0</bucket>
             </map>
-            <map to='#59a14f'>
-              <bucket>4</bucket>
+            <map to='#76b7b2'>
+              <bucket>2</bucket>
             </map>
             <map to='#76b7b2'>
               <bucket>3</bucket>
             </map>
-            <map to='#e15759'>
-              <bucket>2</bucket>
-            </map>
-            <map to='#edc948'>
-              <bucket>6</bucket>
-            </map>
-            <map to='#f28e2b'>
+            <map to='#c5c7c6'>
               <bucket>1</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>4</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>6</bucket>
             </map>
           </encoding>
           <encoding attr='color' field='[none:motorists:ok]' type='palette'>
-            <map to='#499894'>
-              <bucket>9</bucket>
-            </map>
             <map to='#4e79a7'>
               <bucket>0</bucket>
             </map>
-            <map to='#59a14f'>
-              <bucket>4</bucket>
-            </map>
-            <map to='#79706e'>
-              <bucket>10</bucket>
+            <map to='#86bcb6'>
+              <bucket>3</bucket>
             </map>
             <map to='#86bcb6'>
-              <bucket>11</bucket>
+              <bucket>4</bucket>
             </map>
-            <map to='#8cd17d'>
+            <map to='#86bcb6'>
               <bucket>5</bucket>
             </map>
-            <map to='#a0cbe8'>
+            <map to='#8cd17d'>
               <bucket>1</bucket>
             </map>
-            <map to='#b07aa1'>
-              <bucket>28</bucket>
+            <map to='#c5c7c6'>
+              <bucket>2</bucket>
             </map>
-            <map to='#b6992d'>
+            <map to='#e15759'>
               <bucket>6</bucket>
             </map>
-            <map to='#bab0ac'>
+            <map to='#e15759'>
+              <bucket>7</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>8</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>9</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>10</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>11</bucket>
+            </map>
+            <map to='#e15759'>
               <bucket>12</bucket>
             </map>
-            <map to='#d37295'>
+            <map to='#e15759'>
               <bucket>14</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>16</bucket>
             </map>
             <map to='#e15759'>
               <bucket>22</bucket>
             </map>
-            <map to='#f1ce63'>
-              <bucket>7</bucket>
+            <map to='#e15759'>
+              <bucket>28</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[none:cyclists:ok]&#10;[none:motorists:ok]' type='palette'>
+            <map-pri to='multiordinal_blue_10_0'>
+              <bucket>1</bucket>
+            </map-pri>
+            <map-pri to='multiordinal_gold_10_0'>
+              <bucket>4</bucket>
+            </map-pri>
+            <map-pri to='multiordinal_green_10_0'>
+              <bucket>3</bucket>
+            </map-pri>
+            <map-pri to='multiordinal_orange_10_0'>
+              <bucket>2</bucket>
+            </map-pri>
+            <map-pri to='multiordinal_red_10_0'>
+              <bucket>0</bucket>
+            </map-pri>
+            <map-pri to='multiordinal_teal_10_0'>
+              <bucket>6</bucket>
+            </map-pri>
+          </encoding>
+          <encoding attr='color' field='[none:BOROUGH:ok]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>1</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>5</bucket>
+            </map>
+            <map to='#76b7b2'>
+              <bucket>4</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>3</bucket>
             </map>
             <map to='#f28e2b'>
               <bucket>2</bucket>
             </map>
-            <map to='#fabfd2'>
-              <bucket>16</bucket>
+          </encoding>
+          <encoding attr='color' field='[none:time_of_day:nk]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;Morning&quot;</bucket>
             </map>
-            <map to='#ff9d9a'>
-              <bucket>8</bucket>
+            <map to='#76b7b2'>
+              <bucket>&quot;Evening&quot;</bucket>
             </map>
-            <map to='#ffbe7d'>
-              <bucket>3</bucket>
+            <map to='#9c755f'>
+              <bucket>&quot;Afternoon&quot;</bucket>
+            </map>
+            <map to='#ff9da7'>
+              <bucket>&quot;Midnight&quot;</bucket>
             </map>
           </encoding>
         </style-rule>
@@ -909,6 +965,16 @@
   <mapsources>
     <mapsource name='Tableau' />
   </mapsources>
+  <actions>
+    <action caption='Highlight 1 (generated)' name='[Action1]'>
+      <activation auto-clear='true' type='on-select' />
+      <source type='sheet' worksheet='Sheet 9' />
+      <command command='tsc:brush'>
+        <param name='special-fields' value='all' />
+        <param name='target' value='Sheet 9' />
+      </command>
+    </action>
+  </actions>
   <worksheets>
     <worksheet name='Sheet 1'>
       <layout-options>
@@ -936,6 +1002,7 @@
         <style>
           <style-rule element='cell'>
             <format attr='width' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:season:nk]' value='95' />
+            <format attr='height' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:season:nk]' value='70' />
           </style-rule>
         </style>
         <panes>
@@ -955,15 +1022,15 @@
             </style>
           </pane>
         </panes>
-        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[cnt:Number of Records:qk]</rows>
-        <cols>[federated.0o2f5990za50371gu5lcs1qckco7].[none:season:nk]</cols>
+        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[none:season:nk]</rows>
+        <cols>[federated.0o2f5990za50371gu5lcs1qckco7].[cnt:Number of Records:qk]</cols>
       </table>
     </worksheet>
     <worksheet name='Sheet 10'>
       <layout-options>
         <title>
           <formatted-text>
-            <run>Cyclist collisions</run>
+            <run>Collisions in afternoon (12pm-6am)</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -978,20 +1045,24 @@
           <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
             <column aggregation='Avg' caption='Latitude' datatype='real' name='[LATITUDE]' role='dimension' semantic-role='[Geographical].[Latitude]' type='quantitative' />
             <column aggregation='Avg' caption='Longitude' datatype='real' name='[LONGITUDE]' role='dimension' semantic-role='[Geographical].[Longitude]' type='quantitative' />
-            <column aggregation='Sum' datatype='integer' name='[cyclists]' role='dimension' type='ordinal' />
             <column-instance column='[LATITUDE]' derivation='None' name='[none:LATITUDE:qk]' pivot='key' type='quantitative' />
             <column-instance column='[LONGITUDE]' derivation='None' name='[none:LONGITUDE:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[cyclists]' derivation='None' name='[none:cyclists:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[time_of_day]' derivation='None' name='[none:time_of_day:nk]' pivot='key' type='nominal' />
+            <column aggregation='CountD' datatype='string' name='[time_of_day]' role='dimension' type='nominal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:cyclists:ok]'>
-            <groupfilter from='1' function='range' level='[none:cyclists:ok]' to='6' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:time_of_day:nk]'>
+            <groupfilter function='member' level='[none:time_of_day:nk]' member='&quot;Afternoon&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <slices>
-            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:cyclists:ok]</column>
+            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:time_of_day:nk]</column>
           </slices>
           <aggregation value='true' />
         </view>
         <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8173438.1123272497' min='-8284353.1001548404' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5009649.2740682494' min='4930555.4110199548' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+          </style-rule>
           <style-rule element='map-layer'>
             <format attr='enabled' id='tab_base' value='true' />
             <format attr='enabled' id='um_lcover' value='true' />
@@ -1026,9 +1097,12 @@
             </view>
             <mark class='Automatic' />
             <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:time_of_day:nk]' />
+            </encodings>
             <style>
               <style-rule element='mark'>
-                <format attr='size' value='0.0099999997764825821' />
+                <format attr='size' value='0.29585635662078857' />
               </style-rule>
             </style>
           </pane>
@@ -1070,6 +1144,13 @@
           <aggregation value='true' />
         </view>
         <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8173496.5239798324' min='-8257173.5324468901' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5006715.597201895' min='4962012.1824717522' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+          </style-rule>
+          <style-rule element='refline'>
+            <format attr='stroke-color' id='refline0' value='#000000' />
+          </style-rule>
           <style-rule element='map-layer'>
             <format attr='enabled' id='tab_base' value='true' />
             <format attr='enabled' id='um_lcover' value='true' />
@@ -1102,11 +1183,23 @@
             <view>
               <breakdown value='auto' />
             </view>
-            <mark class='Automatic' />
+            <mark class='Circle' />
             <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:pedestrians:ok]' />
+            </encodings>
             <style>
               <style-rule element='mark'>
-                <format attr='size' value='0.0099999997764825821' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-line-first' value='true' />
+                <format attr='mark-labels-line-last' value='true' />
+                <format attr='mark-labels-range-min' value='true' />
+                <format attr='mark-labels-range-max' value='true' />
+                <format attr='mark-labels-mode' value='all' />
+                <format attr='mark-labels-range-scope' value='pane' />
+                <format attr='mark-labels-range-field' value='' />
+                <format attr='mark-labels-show' value='false' />
+                <format attr='size' value='0.44977900385856628' />
               </style-rule>
             </style>
           </pane>
@@ -1281,7 +1374,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run>Cyclists, Peds, Motorists together density map</run>
+            <run>NYC Collisions Data Analysis</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1303,8 +1396,8 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8126570.2336859731' min='-8317828.9556939872' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5029005.1987033114' min='4917275.5272025838' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-7685794.8029649295' min='-8770674.7854284719' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5340445.0982260173' min='4776826.1750656748' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='map-layer'>
             <format attr='enabled' id='tab_base' value='true' />
@@ -1342,7 +1435,7 @@
             <mark-sizing mark-sizing-setting='marks-scaling-off' />
             <style>
               <style-rule element='mark'>
-                <format attr='mark-color' value='#76b7b2' />
+                <format attr='mark-color' value='#e15759' />
                 <format attr='size' value='0.0099999997764825821' />
                 <format attr='mark-labels-cull' value='true' />
                 <format attr='mark-labels-show' value='false' />
@@ -1355,6 +1448,13 @@
       </table>
     </worksheet>
     <worksheet name='Sheet 16'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Number of collisions per season per time of day</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
@@ -1364,10 +1464,10 @@
             <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
               <calculation class='tableau' formula='1' />
             </column>
+            <column-instance column='[Number of Records]' derivation='Count' name='[cnt:Number of Records:qk]' pivot='key' type='quantitative' />
             <column-instance column='[season]' derivation='None' name='[none:season:nk]' pivot='key' type='nominal' />
             <column-instance column='[time_of_day]' derivation='None' name='[none:time_of_day:nk]' pivot='key' type='nominal' />
             <column caption='Season' datatype='string' name='[season]' role='dimension' type='nominal' />
-            <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
             <column aggregation='CountD' datatype='string' name='[time_of_day]' role='dimension' type='nominal' />
           </datasource-dependencies>
           <aggregation value='true' />
@@ -1384,35 +1484,86 @@
             </encodings>
           </pane>
         </panes>
-        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</rows>
+        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[cnt:Number of Records:qk]</rows>
         <cols>([federated.0o2f5990za50371gu5lcs1qckco7].[none:season:nk] / [federated.0o2f5990za50371gu5lcs1qckco7].[none:time_of_day:nk])</cols>
       </table>
     </worksheet>
     <worksheet name='Sheet 17'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Number of Collisions by reason by time of day</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
             <datasource caption='Data1' name='federated.0o2f5990za50371gu5lcs1qckco7' />
           </datasources>
           <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
+            <column aggregation='Sum' caption='Borough' datatype='integer' name='[BOROUGH]' role='dimension' type='ordinal'>
+              <aliases>
+                <alias key='1' value='Queens' />
+                <alias key='2' value='Brooklyn' />
+                <alias key='3' value='Manhattan' />
+                <alias key='4' value='Bronx' />
+                <alias key='5' value='Staten Island' />
+              </aliases>
+            </column>
             <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
               <calculation class='tableau' formula='1' />
             </column>
             <column caption='Vehicle.1.Factor' datatype='string' name='[VEHICLE.1.FACTOR]' role='dimension' type='nominal' />
+            <column-instance column='[BOROUGH]' derivation='None' name='[none:BOROUGH:ok]' pivot='key' type='ordinal' />
             <column-instance column='[VEHICLE.1.FACTOR]' derivation='None' name='[none:VEHICLE.1.FACTOR:nk]' pivot='key' type='nominal' />
             <column-instance column='[time_of_day]' derivation='None' name='[none:time_of_day:nk]' pivot='key' type='nominal' />
             <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
             <column aggregation='CountD' datatype='string' name='[time_of_day]' role='dimension' type='nominal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]'>
+            <groupfilter from='1' function='range' level='[none:BOROUGH:ok]' to='5' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;ALCOHOL INVOLVEMENT&quot;' />
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;BACKING UNSAFELY&quot;' />
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;DRIVER INEXPERIENCE&quot;' />
+              <groupfilter from='&quot;FATIGUED/DROWSY&quot;' function='range' level='[none:VEHICLE.1.FACTOR:nk]' to='&quot;TURNING IMPROPERLY&quot;' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]</column>
+            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]</column>
+          </slices>
           <aggregation value='true' />
         </view>
-        <style />
+        <style>
+          <style-rule element='axis'>
+            <format attr='height' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='162' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='width' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='27' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='text-orientation' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='-90' />
+          </style-rule>
+        </style>
         <panes>
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view>
               <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-color' value='#69aaa5' />
+              </style-rule>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
           </pane>
         </panes>
         <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</rows>
@@ -1420,6 +1571,13 @@
       </table>
     </worksheet>
     <worksheet name='Sheet 18'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>All Collisions by borough</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
@@ -1429,7 +1587,7 @@
             <mapsource name='Tableau' />
           </mapsources>
           <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
-            <column caption='Borough' datatype='integer' name='[BOROUGH]' role='measure' type='quantitative'>
+            <column aggregation='Sum' caption='Borough' datatype='integer' name='[BOROUGH]' role='dimension' type='ordinal'>
               <aliases>
                 <alias key='1' value='Queens' />
                 <alias key='2' value='Brooklyn' />
@@ -1448,8 +1606,8 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8161250.0051722713' min='-8292847.3981514238' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5019016.805816439' min='4925174.2510988889' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8184013.6984381676' min='-8268913.7777436879' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='4999285.8027842576' min='4940082.7528300332' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='map-layer'>
             <format attr='enabled' id='tab_base' value='true' />
@@ -1509,6 +1667,13 @@
       </table>
     </worksheet>
     <worksheet name='Sheet 19'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Cyclist Collisions</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
@@ -1520,26 +1685,23 @@
           <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
             <column aggregation='Avg' caption='Latitude' datatype='real' name='[LATITUDE]' role='dimension' semantic-role='[Geographical].[Latitude]' type='quantitative' />
             <column aggregation='Avg' caption='Longitude' datatype='real' name='[LONGITUDE]' role='dimension' semantic-role='[Geographical].[Longitude]' type='quantitative' />
-            <column caption='Vehicle.1.Factor' datatype='string' name='[VEHICLE.1.FACTOR]' role='dimension' type='nominal' />
+            <column aggregation='Sum' datatype='integer' name='[cyclists]' role='dimension' type='ordinal' />
             <column-instance column='[LATITUDE]' derivation='None' name='[none:LATITUDE:qk]' pivot='key' type='quantitative' />
             <column-instance column='[LONGITUDE]' derivation='None' name='[none:LONGITUDE:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[VEHICLE.1.FACTOR]' derivation='None' name='[none:VEHICLE.1.FACTOR:nk]' pivot='key' type='nominal' />
+            <column-instance column='[cyclists]' derivation='None' name='[none:cyclists:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;ALCOHOL INVOLVEMENT&quot;' />
-              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;FATIGUED/DROWSY&quot;' />
-            </groupfilter>
+          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:cyclists:ok]'>
+            <groupfilter from='1' function='range' level='[none:cyclists:ok]' to='6' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <slices>
-            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]</column>
+            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:cyclists:ok]</column>
           </slices>
           <aggregation value='true' />
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8177221.6027434496' min='-8270618.1792129828' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5000961.6057331143' min='4934360.1826689625' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8165112.7076094197' min='-8285420.7280488582' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5012884.9533257689' min='4928991.0182171986' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='map-layer'>
             <format attr='enabled' id='tab_base' value='true' />
@@ -1576,11 +1738,11 @@
             <mark class='Circle' />
             <mark-sizing mark-sizing-setting='marks-scaling-off' />
             <encodings>
-              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' />
+              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:cyclists:ok]' />
             </encodings>
             <style>
               <style-rule element='mark'>
-                <format attr='size' value='0.0099999997764825821' />
+                <format attr='size' value='0.44977900385856628' />
               </style-rule>
             </style>
           </pane>
@@ -1644,13 +1806,20 @@
       </table>
     </worksheet>
     <worksheet name='Sheet 20'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Number of Collisions by time of day per borough </run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
             <datasource caption='Data1' name='federated.0o2f5990za50371gu5lcs1qckco7' />
           </datasources>
           <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
-            <column caption='Borough' datatype='integer' name='[BOROUGH]' role='measure' type='quantitative'>
+            <column aggregation='Sum' caption='Borough' datatype='integer' name='[BOROUGH]' role='dimension' type='ordinal'>
               <aliases>
                 <alias key='1' value='Queens' />
                 <alias key='2' value='Brooklyn' />
@@ -1667,14 +1836,29 @@
             <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
             <column aggregation='CountD' datatype='string' name='[time_of_day]' role='dimension' type='nominal' />
           </datasource-dependencies>
+          <sort class='manual' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]' direction='ASC'>
+            <dictionary>
+              <bucket>1</bucket>
+              <bucket>2</bucket>
+              <bucket>3</bucket>
+              <bucket>4</bucket>
+              <bucket>5</bucket>
+              <bucket>%all%</bucket>
+            </dictionary>
+          </sort>
           <aggregation value='true' />
         </view>
         <style>
           <style-rule element='cell'>
-            <format attr='width' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:time_of_day:nk]' value='98' />
+            <format attr='width' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:time_of_day:nk]' value='117' />
           </style-rule>
           <style-rule element='header'>
             <format attr='height-header' value='10' />
+          </style-rule>
+          <style-rule element='refboxplot'>
+            <format attr='fill-color' id='refline0' value='#f0f0f0d9' />
+            <format attr='palette' id='refline0' value='bp_gray60' />
+            <format attr='opacity' id='refline0' value='167' />
           </style-rule>
         </style>
         <panes>
@@ -1684,14 +1868,15 @@
             </view>
             <mark class='Circle' />
             <encodings>
-              <text column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]' />
+              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]' />
             </encodings>
             <reference-line axis-column='[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]' boxplot-mark-exclusion='false' boxplot-whisker-type='standard' enable-instant-analytics='true' formula='average' id='refline0' label-type='automatic' probability='95' scope='per-cell' symmetric='false' value-column='[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]' z-order='1' />
             <style>
               <style-rule element='mark'>
                 <format attr='size' value='0.25' />
-                <format attr='mark-labels-show' value='true' />
-                <format attr='mark-labels-cull' value='false' />
+                <format attr='mark-labels-show' value='false' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-mode' value='all' />
                 <format attr='mark-color' value='#499894' />
               </style-rule>
               <style-rule element='pane'>
@@ -1706,9 +1891,266 @@
       </table>
     </worksheet>
     <worksheet name='Sheet 21'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Heat map based on time of the day</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources />
+          <mapsources>
+            <mapsource name='Tableau' />
+          </mapsources>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='map-layer'>
+            <format attr='enabled' id='tab_base' value='true' />
+            <format attr='enabled' id='um_lcover' value='true' />
+            <format attr='enabled' id='tab_coastline' value='false' />
+            <format attr='enabled' id='pp2_line' value='false' />
+            <format attr='enabled' id='light_adm0_bnd' value='false' />
+            <format attr='enabled' id='light_adm0_lbl' value='false' />
+            <format attr='enabled' id='um_adm0_bnd' value='true' />
+            <format attr='enabled' id='um_adm0_lbl' value='true' />
+            <format attr='enabled' id='light_pp2_statebounds' value='false' />
+            <format attr='enabled' id='light_pp2_statelabels' value='false' />
+            <format attr='enabled' id='pp2_adminlabels' value='false' />
+            <format attr='enabled' id='pp2_statebounds' value='true' />
+            <format attr='enabled' id='pp2_statelabels' value='true' />
+            <format attr='enabled' id='countybounds' value='false' />
+            <format attr='enabled' id='countylabels' value='false' />
+            <format attr='enabled' id='zipbounds' value='false' />
+            <format attr='enabled' id='ziplabels' value='false' />
+            <format attr='enabled' id='tab_areabounds' value='false' />
+            <format attr='enabled' id='tab_arealabels' value='false' />
+            <format attr='enabled' id='tab_msabounds' value='false' />
+            <format attr='enabled' id='tab_msalabels' value='false' />
+          </style-rule>
+          <style-rule element='map'>
+            <format attr='washout' value='0.0' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name='Sheet 22'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Collisions by Borough by Reason</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data1' name='federated.0o2f5990za50371gu5lcs1qckco7' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
+            <column aggregation='Sum' caption='Borough' datatype='integer' name='[BOROUGH]' role='dimension' type='ordinal'>
+              <aliases>
+                <alias key='1' value='Queens' />
+                <alias key='2' value='Brooklyn' />
+                <alias key='3' value='Manhattan' />
+                <alias key='4' value='Bronx' />
+                <alias key='5' value='Staten Island' />
+              </aliases>
+            </column>
+            <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+              <calculation class='tableau' formula='1' />
+            </column>
+            <column caption='Vehicle.1.Factor' datatype='string' name='[VEHICLE.1.FACTOR]' role='dimension' type='nominal' />
+            <column-instance column='[BOROUGH]' derivation='None' name='[none:BOROUGH:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[VEHICLE.1.FACTOR]' derivation='None' name='[none:VEHICLE.1.FACTOR:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;ALCOHOL INVOLVEMENT&quot;' />
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;BACKING UNSAFELY&quot;' />
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;FAILURE TO YIELD RIGHT-OF-WAY&quot;' />
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;FATIGUED/DROWSY&quot;' />
+              <groupfilter function='member' level='[none:VEHICLE.1.FACTOR:nk]' member='&quot;TRAFFIC CONTROL DISREGARDED&quot;' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</rows>
+        <cols>[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]</cols>
+        <mark-labels>
+          <mark-label id='0' label-state='off'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]</field>
+                  <field>[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]</field>
+                  <field>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>5</value>
+                <value>&quot;TRAFFIC CONTROL DISREGARDED&quot;</value>
+                <value>170</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+        </mark-labels>
+      </table>
+    </worksheet>
+    <worksheet name='Sheet 23'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data1' name='federated.0o2f5990za50371gu5lcs1qckco7' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
+            <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+              <calculation class='tableau' formula='1' />
+            </column>
+            <column caption='Vehicle.1.Factor' datatype='string' name='[VEHICLE.1.FACTOR]' role='dimension' type='nominal' />
+            <column-instance column='[VEHICLE.1.FACTOR]' derivation='None' name='[none:VEHICLE.1.FACTOR:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='height' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='62' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</rows>
+        <cols>[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name='Sheet 24'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Number of collisions by borough per type of commuter collisions</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data1' name='federated.0o2f5990za50371gu5lcs1qckco7' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
+            <column aggregation='Sum' caption='Borough' datatype='integer' name='[BOROUGH]' role='dimension' type='ordinal'>
+              <aliases>
+                <alias key='1' value='Queens' />
+                <alias key='2' value='Brooklyn' />
+                <alias key='3' value='Manhattan' />
+                <alias key='4' value='Bronx' />
+                <alias key='5' value='Staten Island' />
+              </aliases>
+            </column>
+            <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+              <calculation class='tableau' formula='1' />
+            </column>
+            <column-instance column='[BOROUGH]' derivation='None' name='[none:BOROUGH:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[pedestrians]' derivation='None' name='[none:pedestrians:ok]' pivot='key' type='ordinal' />
+            <column aggregation='Sum' datatype='integer' name='[pedestrians]' role='dimension' type='ordinal' />
+            <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:pedestrians:ok]'>
+            <groupfilter from='0' function='range' level='[none:pedestrians:ok]' to='6' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:pedestrians:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Shape' />
+            <encodings>
+              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='size' value='0.60000002384185791' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</rows>
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name='Sheet 25'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Collisions by time of day</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data1' name='federated.0o2f5990za50371gu5lcs1qckco7' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
+            <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+              <calculation class='tableau' formula='1' />
+            </column>
+            <column-instance column='[Number of Records]' derivation='Sum' name='[sum:Number of Records:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
           <aggregation value='true' />
         </view>
         <style />
@@ -1720,7 +2162,7 @@
             <mark class='Automatic' />
           </pane>
         </panes>
-        <rows />
+        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</rows>
         <cols />
       </table>
     </worksheet>
@@ -1738,7 +2180,7 @@
             <datasource caption='Data1' name='federated.0o2f5990za50371gu5lcs1qckco7' />
           </datasources>
           <datasource-dependencies datasource='federated.0o2f5990za50371gu5lcs1qckco7'>
-            <column caption='Borough' datatype='integer' name='[BOROUGH]' role='measure' type='quantitative'>
+            <column aggregation='Sum' caption='Borough' datatype='integer' name='[BOROUGH]' role='dimension' type='ordinal'>
               <aliases>
                 <alias key='1' value='Queens' />
                 <alias key='2' value='Brooklyn' />
@@ -1756,6 +2198,9 @@
           <aggregation value='true' />
         </view>
         <style>
+          <style-rule element='cell'>
+            <format attr='height' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]' value='38' />
+          </style-rule>
           <style-rule element='mark'>
             <encoding attr='size-bar' field='[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]' field-type='quantitative' max-size='1' min-size='0.005' type='centersize' />
           </style-rule>
@@ -1775,8 +2220,8 @@
             </style>
           </pane>
         </panes>
-        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</rows>
-        <cols>[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]</cols>
+        <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]</rows>
+        <cols>[federated.0o2f5990za50371gu5lcs1qckco7].[sum:Number of Records:qk]</cols>
       </table>
     </worksheet>
     <worksheet name='Sheet 4'>
@@ -1803,8 +2248,14 @@
           <aggregation value='true' />
         </view>
         <style>
+          <style-rule element='axis'>
+            <format attr='height' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='130' />
+          </style-rule>
           <style-rule element='cell'>
-            <format attr='width' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='80' />
+            <format attr='width' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='88' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='text-orientation' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' value='-90' />
           </style-rule>
         </style>
         <panes>
@@ -1850,7 +2301,7 @@
             <column-instance column='[motorists]' derivation='None' name='[none:motorists:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
           <filter class='categorical' column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:motorists:ok]'>
-            <groupfilter from='1' function='range' level='[none:motorists:ok]' to='28' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+            <groupfilter from='2' function='range' level='[none:motorists:ok]' to='28' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <slices>
             <column>[federated.0o2f5990za50371gu5lcs1qckco7].[none:motorists:ok]</column>
@@ -1859,8 +2310,8 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8178847.1994362622' min='-8292778.6015960611' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='5006646.8803429157' min='4931465.0285222121' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]' field-type='quantitative' max='-8234742.1136290757' min='-8262450.5363824526' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]' field-type='quantitative' max='4970344.4783228347' min='4950585.5065111173' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='map-layer'>
             <format attr='enabled' id='tab_base' value='true' />
@@ -1896,15 +2347,21 @@
             </view>
             <mark class='Automatic' />
             <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.0o2f5990za50371gu5lcs1qckco7].[none:motorists:ok]' />
+            </encodings>
             <style>
               <style-rule element='mark'>
-                <format attr='size' value='0.0099999997764825821' />
+                <format attr='size' value='0.44977900385856628' />
               </style-rule>
             </style>
           </pane>
         </panes>
         <rows>[federated.0o2f5990za50371gu5lcs1qckco7].[none:LATITUDE:qk]</rows>
         <cols>[federated.0o2f5990za50371gu5lcs1qckco7].[none:LONGITUDE:qk]</cols>
+        <show-full-range>
+          <column>[federated.0o2f5990za50371gu5lcs1qckco7].[motorists (bin)]</column>
+        </show-full-range>
       </table>
     </worksheet>
   </worksheets>
@@ -1933,20 +2390,7 @@
     </window>
     <window class='worksheet' name='Sheet 2'>
       <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-          </strip>
-        </edge>
         <edge name='top'>
-          <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
           <strip size='31'>
             <card type='title' />
           </strip>
@@ -1980,31 +2424,6 @@
         </edge>
       </cards>
     </window>
-    <window class='worksheet' name='Sheet 9'>
-      <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-          </strip>
-        </edge>
-        <edge name='top'>
-          <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
-          <strip size='31'>
-            <card type='title' />
-          </strip>
-        </edge>
-      </cards>
-      <viewpoint>
-        <default-map-tool-selection tool='1' />
-      </viewpoint>
-    </window>
     <window class='worksheet' name='Sheet 10'>
       <cards>
         <edge name='left'>
@@ -2021,13 +2440,21 @@
           <strip size='2147483647'>
             <card type='rows' />
           </strip>
-          <strip size='31'>
+          <strip size='2147483647'>
             <card type='title' />
           </strip>
         </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='2' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:time_of_day:nk]' type='color' />
+          </strip>
+        </edge>
       </cards>
+      <viewpoint>
+        <default-map-tool-selection tool='1' />
+      </viewpoint>
     </window>
-    <window class='worksheet' name='Sheet 11'>
+    <window class='worksheet' name='Sheet 9'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -2043,16 +2470,41 @@
           <strip size='2147483647'>
             <card type='rows' />
           </strip>
-          <strip size='31'>
+          <strip size='2147483647'>
             <card type='title' />
           </strip>
         </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:motorists:ok]' type='color' />
+          </strip>
+        </edge>
       </cards>
+      <viewpoint>
+        <default-map-tool-selection tool='1' />
+      </viewpoint>
+    </window>
+    <window class='worksheet' name='Sheet 11'>
+      <cards>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:pedestrians:ok]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <default-map-tool-selection tool='1' />
+      </viewpoint>
     </window>
     <window class='worksheet' name='Sheet 4'>
       <cards>
         <edge name='left'>
-          <strip size='160'>
+          <strip size='100'>
             <card type='pages' />
             <card type='filters' />
             <card type='marks' />
@@ -2139,21 +2591,8 @@
     </window>
     <window class='worksheet' name='Sheet 15'>
       <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-          </strip>
-        </edge>
         <edge name='top'>
           <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
-          <strip size='31'>
             <card type='title' />
           </strip>
         </edge>
@@ -2192,7 +2631,7 @@
     <window class='worksheet' name='Sheet 17'>
       <cards>
         <edge name='left'>
-          <strip size='160'>
+          <strip size='100'>
             <card type='pages' />
             <card type='filters' />
             <card type='marks' />
@@ -2205,7 +2644,7 @@
           <strip size='2147483647'>
             <card type='rows' />
           </strip>
-          <strip size='31'>
+          <strip size='2147483647'>
             <card type='title' />
           </strip>
         </edge>
@@ -2213,21 +2652,8 @@
     </window>
     <window class='worksheet' name='Sheet 18'>
       <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-          </strip>
-        </edge>
         <edge name='top'>
           <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
-          <strip size='31'>
             <card type='title' />
           </strip>
         </edge>
@@ -2244,18 +2670,114 @@
     <window class='worksheet' name='Sheet 20'>
       <cards>
         <edge name='left'>
+          <strip size='252'>
+            <card type='marks' />
+            <card type='rows' />
+            <card type='columns' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='193'>
+            <card pane-specification-id='0' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Sheet 21'>
+      <cards>
+        <edge name='left'>
           <strip size='160'>
             <card type='pages' />
             <card type='filters' />
             <card type='marks' />
-            <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
             <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
             <card type='title' />
           </strip>
         </edge>
       </cards>
     </window>
-    <window class='worksheet' maximized='true' name='Sheet 19'>
+    <window class='worksheet' name='Sheet 19'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='2' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:cyclists:ok]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <default-map-tool-selection tool='1' />
+      </viewpoint>
+    </window>
+    <window class='worksheet' name='Sheet 22'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='300'>
+            <card pane-specification-id='0' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Sheet 23'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' name='Sheet 24'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -2276,16 +2798,13 @@
           </strip>
         </edge>
         <edge name='right'>
-          <strip size='160'>
-            <card pane-specification-id='2' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:VEHICLE.1.FACTOR:nk]' type='color' />
+          <strip size='300'>
+            <card pane-specification-id='0' param='[federated.0o2f5990za50371gu5lcs1qckco7].[none:BOROUGH:ok]' type='color' />
           </strip>
         </edge>
       </cards>
-      <viewpoint>
-        <default-map-tool-selection tool='1' />
-      </viewpoint>
     </window>
-    <window class='worksheet' name='Sheet 21'>
+    <window class='worksheet' maximized='true' name='Sheet 25'>
       <cards>
         <edge name='left'>
           <strip size='160'>

@@ -12,6 +12,7 @@
 data_set = read.csv("NYC-vehicle-collisions.csv")
 data_set = data_set[,-1]
 data_set = data_set[,-7]
+data_set = data_set[-(1:3),]
 data_set = data_set[ , -which(names(data_set) %in% c("OFF.STREET.NAME","VEHICLE.2.FACTOR","VEHICLE.3.FACTOR", "VEHICLE.4.FACTOR", "VEHICLE.5.FACTOR","VEHICLE.3.TYPE", "VEHICLE.4.TYPE", "VEHICLE.5.TYPE"))]
 main_boroughs = dplyr::filter(data_set, BOROUGH==1 | BOROUGH==2 | BOROUGH==3 | BOROUGH==4 | BOROUGH==5)
 
@@ -94,6 +95,7 @@ winter = dplyr::filter(main_boroughs_temp, season == 'Winter')
 fall = dplyr::filter(main_boroughs_temp, season == 'Fall')
 summer = dplyr::filter(main_boroughs_temp, season == 'Summer')
 
+main_boroughs_ttest = dplyr::filter(main_boroughs_temp, pedestrians!=0 | cyclists!=0 | motorists !=0)
 
 # library(ggplot2)
 # temp_plot_ = ggplot(factor_distraction, aes(VEHICLE.1.FACTOR, PERSONS.KILLED))
